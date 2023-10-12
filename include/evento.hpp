@@ -13,7 +13,10 @@ private:
 
 public:
     // Constructor.
-    explicit Evento(std::string accion_ejecutada);
+    Evento(std::string accion_ejecutada);
+
+    // Constructor default:
+    Evento() = default;
 
     // Pre:
     // Post: Devuelve true si la acción coincide con la ejecutada.
