@@ -17,6 +17,9 @@ add_executable(ayp2_plantilla_tp2_2c2023
         src/Evento.cpp
         src/Item.cpp
         src/Inventario.cpp
+        src/Destino.cpp
+        src/Destino.cpp
+        src/Menu.cpp
         # Otros archivos .cpp, de la forma src/Ejemplo.cpp
 )
 

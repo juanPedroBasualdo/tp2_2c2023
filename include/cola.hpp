@@ -58,4 +58,82 @@ public:
     ~Cola();
 };
 
+template<typename T>
+Cola<T>::Cola() {
+    primer_nodo = nullptr;
+    ultimo_nodo = nullptr;
+    cantidad_datos = 0;
+}
+
+template<typename T>
+void Cola<T>::alta(T dato) {
+    if(cantidad_datos == 0){
+        Nodo<T>* nodo_nuevo = new Nodo<T>(dato);
+        primer_nodo = nodo_nuevo;
+        ultimo_nodo = nodo_nuevo;
+        delete nodo_nuevo;
+        cantidad_datos++;
+    } else{
+        Nodo<T>* nodo_nuevo = new Nodo<T>(dato);
+        ultimo_nodo->cambiar_siguiente(nodo_nuevo);
+        ultimo_nodo = nodo_nuevo;
+        delete nodo_nuevo;
+        cantidad_datos++;
+    }
+}
+
+template<typename T>
+T Cola<T>::baja() {
+    if(cantidad_datos == 0){
+        throw Cola_exception();
+    } else{
+        Nodo<T>* baja = primer_nodo;
+        T dato_baja = baja->obtener_dato();
+        Nodo<T>* siguiente = baja->obtener_siguiente();
+        primer_nodo = siguiente;
+        cantidad_datos--;
+        return dato_baja;
+    }
+}
+
+template<typename T>
+T Cola<T>::primero() {
+    if(cantidad_datos == 0){
+        throw Cola_exception();
+    } else {
+        T dato_objetivo = primer_nodo->obtener_dato();
+        return dato_objetivo;
+    }
+}
+
+template<typename T>
+T Cola<T>::ultimo() {
+    if(cantidad_datos == 0){
+        throw Cola_exception();
+    } else {
+        T dato_objetivo = ultimo_nodo->obtener_dato();
+        return dato_objetivo;
+    }
+}
+
+template<typename T>
+size_t Cola<T>::tamanio() {
+    return cantidad_datos;
+}
+
+template<typename T>
+bool Cola<T>::vacio() {
+    if(cantidad_datos == 0){
+        return true;
+    } else{
+        return false;
+    };
+}
+
+template<typename T>
+Cola<T>::~Cola() {
+    primer_nodo = nullptr;
+    ultimo_nodo = nullptr;
+}
+
 #endif

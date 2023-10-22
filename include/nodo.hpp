@@ -49,7 +49,7 @@ T Nodo<T>::obtener_dato() {
 
 template<typename T>
 Nodo<T>::~Nodo() {
-    delete siguiente;
+    siguiente = nullptr;
 }
 
 #endif

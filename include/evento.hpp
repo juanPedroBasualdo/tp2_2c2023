@@ -15,11 +15,15 @@ public:
     // Constructor.
     explicit Evento(std::string accion_ejecutada);
 
+    //Constructor default;
+    Evento() = default;
+
     // Pre:
     // Post: Devuelve true si la acción coincide con la ejecutada.
     bool operator==(const std::string& accion);
 
     // Otros métodos asociados a la clase.
+
 };
 
 #endif

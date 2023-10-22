@@ -4,7 +4,7 @@
 template<typename T>
 class Nodo_de {
 private:
-    T dato{};
+    T dato;
     Nodo_de<T>* anterior;
     Nodo_de<T>* siguiente;
 public:
@@ -79,8 +79,8 @@ T Nodo_de<T>::obtener_dato() {
 
 template<typename T>
 Nodo_de<T>::~Nodo_de() {
-    delete siguiente;
-    delete anterior;
+    siguiente = nullptr;
+    anterior = nullptr;
 }
 
 #endif
