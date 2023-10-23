@@ -67,19 +67,15 @@ Cola<T>::Cola() {
 
 template<typename T>
 void Cola<T>::alta(T dato) {
+    Nodo<T>* nodo_nuevo = new Nodo<T>(dato);
     if(cantidad_datos == 0){
-        Nodo<T>* nodo_nuevo = new Nodo<T>(dato);
         primer_nodo = nodo_nuevo;
         ultimo_nodo = nodo_nuevo;
-        delete nodo_nuevo;
-        cantidad_datos++;
     } else{
-        Nodo<T>* nodo_nuevo = new Nodo<T>(dato);
         ultimo_nodo->cambiar_siguiente(nodo_nuevo);
         ultimo_nodo = nodo_nuevo;
-        delete nodo_nuevo;
-        cantidad_datos++;
     }
+    cantidad_datos++;
 }
 
 template<typename T>

@@ -64,12 +64,12 @@ Nodo_de<T>* Nodo_de<T>::obtener_siguiente() {
 
 template<typename T>
 void Nodo_de<T>::cambiar_anterior(Nodo_de<T> *nuevo) {
-    anterior = nuevo;
+    this->anterior = nuevo;
 }
 
 template<typename T>
 void Nodo_de<T>::cambiar_siguiente(Nodo_de<T> *nuevo) {
-    siguiente = nuevo;
+    this->siguiente = nuevo;
 }
 
 template<typename T>

@@ -18,9 +18,6 @@ public:
     // Constructor default:
     Evento() = default;
 
-    //Constructor default;
-    Evento() = default;
-
     // Pre:
     // Post: Devuelve true si la acción coincide con la ejecutada.
     bool operator==(const std::string& accion);

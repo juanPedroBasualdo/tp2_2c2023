@@ -114,38 +114,57 @@ Lista_de<T>::Lista_de() {
 
 
 template<typename T>
-Nodo_de<T>* Lista_de<T>::obtener_nodo(size_t indice){
-    if(cantidad_datos < indice || cantidad_datos == 0){
+Nodo_de<T>* Lista_de<T>::obtener_nodo(size_t indice) {
+    if (cantidad_datos < indice || cantidad_datos == 0) {
         throw Lista_exception();
-    }
-    else if(cantidad_datos == 1 || indice == 0){
+    } else if (indice == 0) {
         return primer_nodo;
-    } else if(cantidad_datos - 1 == indice){
+    } else if (cantidad_datos - 1 == indice) {
         return ultimo_nodo;
-    } else{
-        Nodo_de<T>* nodo_aux = cursor->obtener_siguiente();
-        while(indice_cursor != indice){
-            if(puede_avanzar()) {
+    } else {
+        if (indice <= (cantidad_datos / 2)) {
+            cursor = primer_nodo;
+            indice_cursor = 0;
+            Nodo_de<T> *nodo_aux = cursor->obtener_siguiente();
+            while (indice_cursor != indice) {
+                if (puede_avanzar()) {
+                    cursor = nodo_aux;
+                    indice_cursor++;
+                    if (indice_cursor == indice) {
+                        return nodo_aux;
+                    } else {
+                        nodo_aux = cursor->obtener_siguiente();
+                    }
+                } else {
+                    reiniciar_cursor(true);
+                    indice_cursor = 0;
+                }
+            }
+        } else {
+            cursor = ultimo_nodo;
+            indice_cursor = cantidad_datos - 1;
+            Nodo_de<T> *nodo_aux = cursor->obtener_anterior();
+            if (puede_avanzar()) {
                 cursor = nodo_aux;
-                indice_cursor++;
-                nodo_aux = cursor->obtener_siguiente();
-            } else{
-                reiniciar_cursor(true);
-                indice_cursor = 0;
+                indice_cursor--;
+                if (indice_cursor == indice) {
+                    return nodo_aux;
+                } else {
+                    reiniciar_cursor(false);
+                    indice_cursor = cantidad_datos - 1;
+                }
             }
         }
-        return nodo_aux;
     }
 }
 
 template<typename T>
 void Lista_de<T>::alta(T dato) {
+    Nodo_de<T>* nuevo_nodo = new Nodo_de(dato);
     if(cantidad_datos == 0){
-        Nodo_de<T>* nuevo_nodo = new Nodo_de(dato);
         primer_nodo = nuevo_nodo;
         ultimo_nodo = nuevo_nodo;
     } else{
-        Nodo_de<T>* nuevo_nodo = new Nodo_de(dato);
         nuevo_nodo->cambiar_anterior(ultimo_nodo);
         ultimo_nodo->cambiar_siguiente(nuevo_nodo);
         ultimo_nodo = nuevo_nodo;
@@ -155,75 +174,69 @@ void Lista_de<T>::alta(T dato) {
 
 template<typename T>
 void Lista_de<T>::alta(T dato, size_t indice) {
-    if(cantidad_datos < indice){
+    if(indice > cantidad_datos){
         throw Lista_exception();
-    } else{
-        if(cantidad_datos == 0){
-            Nodo_de<T>* nuevo_nodo = new Nodo_de(dato);
-            primer_nodo = nuevo_nodo;
-            ultimo_nodo = nuevo_nodo;
-        } else if(cantidad_datos == indice){
-            Nodo_de<T>* nodo_nuevo = new Nodo_de(dato);
-            nodo_nuevo->cambiar_anterior(ultimo_nodo);
-            ultimo_nodo->cambiar_siguiente(nodo_nuevo);
-            ultimo_nodo = nodo_nuevo;
-        } else {
-            Nodo_de<T>* nodo_nuevo = new Nodo_de(dato);
-            Nodo_de<T> *nodo_anterior = obtener_nodo((indice - 1));
-            Nodo_de<T> *nodo_siguiente = obtener_nodo(indice);
-            nodo_nuevo->cambiar_anterior(nodo_anterior);
-            nodo_nuevo->cambiar_siguiente(nodo_siguiente);
-            nodo_anterior->cambiar_siguiente(nodo_nuevo);
-            nodo_siguiente->cambiar_anterior(nodo_nuevo);
-        }
-        cantidad_datos++;
     }
+    Nodo_de<T>* nuevo_nodo = new Nodo_de(dato);
+    if(cantidad_datos == 0){
+        return alta(dato);
+    } else if(indice == 0){
+        primer_nodo->cambiar_anterior(nuevo_nodo);
+        nuevo_nodo->cambiar_siguiente(primer_nodo);
+        primer_nodo = nuevo_nodo;
+    } else if(cantidad_datos == indice){
+        nuevo_nodo->cambiar_anterior(ultimo_nodo);
+        ultimo_nodo->cambiar_siguiente(nuevo_nodo);
+        ultimo_nodo = nuevo_nodo;
+    } else {
+        Nodo_de<T>* nodo_anterior = obtener_nodo((indice - 1));
+        Nodo_de<T>* nodo_siguiente = obtener_nodo(indice);
+        nuevo_nodo->cambiar_anterior(nodo_anterior);
+        nuevo_nodo->cambiar_siguiente(nodo_siguiente);
+        nodo_anterior->cambiar_siguiente(nuevo_nodo);
+        nodo_siguiente->cambiar_anterior(nuevo_nodo);
+    }
+    nuevo_nodo = nullptr;
+    cantidad_datos++;
 }
 
 template<typename T>
 T Lista_de<T>::baja() {
     if(cantidad_datos == 0){
         throw Lista_exception();
-    } else{
-        Nodo_de<T>* baja = ultimo_nodo;
-        T dato_baja = baja->obtener_dato();
-        Nodo_de<T>* anterior = baja->obtener_anterior();
-        ultimo_nodo = anterior;
-        cantidad_datos--;
-        return dato_baja;
     }
+    Nodo_de<T>* baja = ultimo_nodo;
+    T dato_baja = baja->obtener_dato();
+    Nodo_de<T>* anterior = baja->obtener_anterior();
+    ultimo_nodo = anterior;
+    cantidad_datos--;
+    return dato_baja;
 }
 
 template<typename T>
 T Lista_de<T>::baja(size_t indice) {
-    if(cantidad_datos == 0 || cantidad_datos < indice){
+    if(cantidad_datos == 0 || cantidad_datos <= indice){
         throw Lista_exception();
     }
-    else{
-        Nodo_de<T>* baja = obtener_nodo(indice);
-        T dato_baja = baja->obtener_dato();
-        if(indice == 0){
-            Nodo_de<T>* siguiente = baja->obtener_siguiente();
-            siguiente = primer_nodo;
-            delete baja;
-            cantidad_datos--;
-            return dato_baja;
-        } else if(indice == cantidad_datos){
-            Nodo_de<T>* anterior = baja->obtener_anterior();
-            ultimo_nodo = anterior;
-            delete baja;
-            cantidad_datos--;
-            return dato_baja;
-        } else{
-            Nodo_de<T>* anterior = baja->obtener_anterior();
-            Nodo_de<T>* siguiente = baja->obtener_siguiente();
-            siguiente->cambiar_anterior(anterior);
-            anterior->cambiar_siguiente(siguiente);
-            delete baja;
-            cantidad_datos--;
-            return dato_baja;
-        }
+    Nodo_de<T>* baja = obtener_nodo(indice);
+    T dato_baja = baja->obtener_dato();
+    if(indice == 0){
+        Nodo_de<T>* siguiente = baja->obtener_siguiente();
+        siguiente->cambiar_anterior(nullptr);
+        primer_nodo = siguiente;
+    } else if(indice == cantidad_datos - 1){
+        Nodo_de<T>* anterior = baja->obtener_anterior();
+        anterior->cambiar_siguiente(nullptr);
+        ultimo_nodo = anterior;
+    } else{
+        Nodo_de<T>* anterior = baja->obtener_anterior();
+        Nodo_de<T>* siguiente = baja->obtener_siguiente();
+        siguiente->cambiar_anterior(anterior);
+        anterior->cambiar_siguiente(siguiente);
     }
+    delete baja;
+    cantidad_datos--;
+    return dato_baja;
 }
 
 template<typename T>
@@ -232,8 +245,9 @@ T Lista_de<T>::primero() {
         throw Lista_exception();
     }
     else {
-        T dato_objetivo = primer_nodo->obtener_dato();
-        return dato_objetivo;
+        Nodo_de<T>* nodo_objetivo = primer_nodo;
+        T primer_objetivo = nodo_objetivo->obtener_dato();
+        return primer_objetivo;
     }
 }
 
@@ -243,26 +257,24 @@ T Lista_de<T>::ultimo() {
         throw Lista_exception();
     }
     else{
-        //T dato_objetivo = ultimo_nodo->obtener_dato();
-        return ultimo_nodo->obtener_dato(); //dato_objetivo;
+        Nodo_de<T>* nodo_ultimo = ultimo_nodo;
+        T elemento_ultimo = nodo_ultimo->obtener_dato();
+        return elemento_ultimo;
     }
 }
 
 template<typename T>
 T Lista_de<T>::elemento(size_t indice) {
-    if(indice > cantidad_datos){
+    if(indice >= cantidad_datos){
         throw Lista_exception();
     } else{
-        Nodo_de<T>* nodo_elemento = obtener_nodo(indice);
-        T elemento = nodo_elemento->obtener_dato();
-        nodo_elemento = nullptr;
-        return elemento;
+        return obtener_nodo(indice)->obtener_dato();
     }
 }
 
 template<typename T>
 bool Lista_de<T>::puede_avanzar(){
-    return indice_cursor != -1;
+    return (cursor != nullptr);
 }
 
 template<typename T>
@@ -271,8 +283,7 @@ T Lista_de<T>::avanzar(bool siguiente){
         if(puede_avanzar()){
             Nodo_de<T>* nodo_actual = obtener_nodo(indice_cursor);
             indice_cursor++;
-            Nodo_de<T>* nodo_siguiente = obtener_nodo(indice_cursor);
-            cursor = nodo_siguiente;
+            cursor = nodo_actual->obtener_siguiente();
             return nodo_actual->obtener_dato();
         }
         else{
@@ -282,8 +293,7 @@ T Lista_de<T>::avanzar(bool siguiente){
         if(puede_avanzar()){
             Nodo_de<T>* nodo_actual = obtener_nodo(indice_cursor);
             indice_cursor--;
-            Nodo_de<T>* nodo_anterior = obtener_nodo(indice_cursor);
-            cursor = nodo_anterior;
+            cursor = nodo_actual->obtener_anterior();
             return nodo_actual->obtener_dato();
         }
         else{

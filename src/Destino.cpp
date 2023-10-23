@@ -17,7 +17,7 @@ void Destino::acolar(const string& nombre_evento){
         Evento evento(ACCION_APERTURA_MAPA);
         eventos.alta(evento);
     } else{
-        cout << "Escriba un evento" << endl;
+        cout << "El evento " << nombre_evento << " no es un evento correcto (GUARDADO, APERTURA_MAPA)." << endl;
     }
 }
 
