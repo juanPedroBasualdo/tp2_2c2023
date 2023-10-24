@@ -126,11 +126,11 @@ Nodo_de<T>* Lista_de<T>::obtener_nodo(size_t indice) {
             cursor = primer_nodo;
             indice_cursor = 0;
             Nodo_de<T> *nodo_aux = cursor->obtener_siguiente();
-            while (indice_cursor != indice) {
+            while (indice_cursor != static_cast<int>(indice)) {
                 if (puede_avanzar()) {
                     cursor = nodo_aux;
                     indice_cursor++;
-                    if (indice_cursor == indice) {
+                    if (indice_cursor == static_cast<int>(indice)) {
                         return nodo_aux;
                     } else {
                         nodo_aux = cursor->obtener_siguiente();
@@ -142,20 +142,21 @@ Nodo_de<T>* Lista_de<T>::obtener_nodo(size_t indice) {
             }
         } else {
             cursor = ultimo_nodo;
-            indice_cursor = cantidad_datos - 1;
+            indice_cursor = static_cast<int>(cantidad_datos - 1);
             Nodo_de<T> *nodo_aux = cursor->obtener_anterior();
             if (puede_avanzar()) {
                 cursor = nodo_aux;
                 indice_cursor--;
-                if (indice_cursor == indice) {
+                if (indice_cursor == static_cast<int>(indice)) {
                     return nodo_aux;
                 } else {
                     reiniciar_cursor(false);
-                    indice_cursor = cantidad_datos - 1;
+                    indice_cursor = static_cast<int>(cantidad_datos - 1);
                 }
             }
         }
     }
+    return nullptr;
 }
 
 template<typename T>
@@ -317,7 +318,7 @@ void Lista_de<T>::reiniciar_cursor(bool principio) {
             indice_cursor = -1;
             cursor = 0;
         } else{
-            indice_cursor = (cantidad_datos - 1);
+            indice_cursor = static_cast<int>(cantidad_datos - 1);
             cursor = ultimo_nodo;
         }
     }

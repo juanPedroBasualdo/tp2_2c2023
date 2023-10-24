@@ -5,6 +5,7 @@
 #include "Item.hpp"
 #include <string>
 #include <iostream>
+#include <fstream>
 
 class Inventario{
 private:
