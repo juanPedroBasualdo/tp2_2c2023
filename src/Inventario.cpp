@@ -61,6 +61,7 @@ void Inventario::consultar_inventario() {
         item_actual.listar_informacion();
         cout << endl;
     }
+    cout << endl;
 }
 
 void Inventario::guardar(const std::string& archivo_guardado) {
